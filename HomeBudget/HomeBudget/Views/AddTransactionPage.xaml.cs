@@ -40,19 +40,24 @@ namespace HomeBudget.Views
         public string SelectedCategory { get; set; }
         public string SelectedTypes { get; set; }
 
-        public AddTransactionPage()
+        private NavigationPage navPage;
+        public AddTransactionPage(string type)
         {
             InitializeComponent();
             Task.Run(async () =>
             {
                 Accounts = await Services.DatabaseConnection.GetAccounts();
             }).Wait();
+
+            SelectedTypes = type;
+            navPage = new NavigationPage(new MainTabbedPage());
+
             BindingContext = this;
         }
 
         private async void SaveBtn_Clicked(object sender, EventArgs e)
         {
-            if (Name == null || Price == null || SelectedTypes == null)
+            if (Name == null || Price == null)
             {
                 await DisplayAlert("Dodawanie", "Popraw dane!", "Ok");
                 return;
@@ -80,12 +85,14 @@ namespace HomeBudget.Views
             */
             //await Services.DatabaseConnection.UpdateAccount(SelectedAccount);
 
-            await Navigation.PopAsync();
+            Application.Current.MainPage = navPage;
+            await navPage.PopAsync();
         }
 
         private async void CancelBtn_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PopAsync();
+            Application.Current.MainPage = navPage;
+            await navPage.PopAsync();
         }
     }
 }

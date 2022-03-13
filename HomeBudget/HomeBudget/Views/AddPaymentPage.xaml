@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="HomeBudget.Views.AddTransactionPage"
-             Title="Nowa transakcja"
-             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+             x:Class="HomeBudget.Views.AddPaymentPage"
+             Title="Nowa płatność
+             ">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -15,6 +15,7 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
+    
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Spacing="24">
@@ -28,44 +29,18 @@
 
                     <Frame Style="{StaticResource FrameAddNews}" >
                         <StackLayout Spacing="0">
-                            <Label x:Name="DescriprionPrice" Text="Cena" Style="{StaticResource TextColorLabel}" />
+                            <Label x:Name="DescriprionPrice" Text="Kwota" Style="{StaticResource TextColorLabel}" />
                             <Entry x:Name="TransactionPrice" Text="{Binding Price}" Style="{StaticResource TextColorLabel}" Keyboard="Numeric"/>
                         </StackLayout>
                     </Frame>
 
-                    <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource FrameAddNews}" >
+                    <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource FrameAddNews}" >
                         <StackLayout Spacing="0">
-                            <Label x:Name="DescriptionCategory" Text="Kategoria" Style="{StaticResource TextColorLabel}"/>
-                            <Picker ItemsSource="{Binding Categorys}"
-                                        ItemDisplayBinding="{Binding .}"
-                                        SelectedItem="{Binding SelectedCategory}"  Style="{StaticResource TextColorLabel}" />
+                            <Label x:Name="DescriptionDate" Text="Termin płatności" Style="{StaticResource TextColorLabel}" />
+                            <DatePicker x:Name="TransactionDate" TextColor="Gray" Date="{Binding Date}"/>
                         </StackLayout>
                     </Frame>
-
-                    <!--<Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>-->
-                        <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource FrameAddNews}" >
-                            <StackLayout Spacing="0">
-                                <Label x:Name="DescriptionDate" Text="Data" Style="{StaticResource TextColorLabel}" />
-                                <DatePicker x:Name="TransactionDate" TextColor="Gray" Date="{Binding Date}"/>
-                            </StackLayout>
-                        </Frame>
-                        <!--<Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource FrameAddNews}" >
-                            <StackLayout Spacing="0">
-                                <Label x:Name="DescriptionType" Text="Typ" Style="{StaticResource TextColorLabel}" />
-                                <Picker ItemsSource="{Binding Types}"
-                                        ItemDisplayBinding="{Binding .}"
-                                        SelectedItem="{Binding SelectedTypes}"
-                                          Style="{StaticResource TextColorLabel}"/>
-                            </StackLayout>
-                        </Frame>
-                    </Grid>-->
+                    
                     <Frame Style="{StaticResource FrameAddNews}" >
                         <StackLayout Spacing="0">
                             <Label x:Name="DescriptionDesc" Text="Opis" Style="{StaticResource TextColorLabel}"/>

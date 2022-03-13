@@ -11,7 +11,7 @@ namespace HomeBudget.Convertors
             if (value != null)
             {
                 string val = (string)value;
-                if (val == "Income")
+                if (val == "Przychody")
                 {
                     return "arrow-up.png";
                 }

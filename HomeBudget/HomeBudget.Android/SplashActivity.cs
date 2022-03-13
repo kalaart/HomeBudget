@@ -13,7 +13,7 @@ using System.Text;
 
 namespace HomeBudget.Droid
 {
-    [Activity(Label = "Finance Manager", Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true)]
+    [Activity(Label = "HomeBudget", Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true)]
     public class SplashActivity : AppCompatActivity
     {
         static readonly string TAG = "X:" + typeof(SplashActivity).Name;

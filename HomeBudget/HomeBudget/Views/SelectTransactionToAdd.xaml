@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HomeBudget.Views.SelectTransactionToAdd"
+             Title="Wybierz typ transakcji"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TextColorLabel" TargetType="Label">
+                <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource BackgroundLight}, Light={StaticResource BackgroundDark}}"/>
+            </Style>
+            <Style x:Key="TextColorEntry" TargetType="Entry">
+                <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource BackgroundLight}, Light={StaticResource BackgroundDark}}"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical" Spacing="20" VerticalOptions="CenterAndExpand">
+            <Button x:Name="IncomeBtn" Text="Przychody" WidthRequest="200" HeightRequest="50" Style="{StaticResource MainButtonChecked}" Clicked="Btn_Clicked"/>
+            <Button x:Name="ExpensesBtn" Text="Wydatki" WidthRequest="200" HeightRequest="50" Style="{StaticResource MainButtonChecked}" Clicked="Btn_Clicked" />
+            <Button x:Name="PaymentsBtn" Text="Płatności" WidthRequest="200" HeightRequest="50" Style="{StaticResource MainButtonChecked}" Clicked="Btn_Clicked" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -13,12 +13,15 @@ namespace HomeBudget.Views
         {
             "Przychody",
             "Wydatki",
+            "Płatności",
             "Wszystkie"
         };
 
         public ObservableCollection<Models.Transaction> TransactionsList { get; set; }
 
+        public ObservableCollection<Models.Payment> PaymentsList { get; set; }
         public Models.Transaction CurrentTransactionItem { get; set; }
+        public Models.Payment CurrentPaymentItem { get; set; }
         public Button CurrentCheck { get; set; } = new Button { Text = "-" };
 
         public ExpencesPage()
@@ -37,6 +40,9 @@ namespace HomeBudget.Views
                 case "Wydatki":
                     TransactionsList = new ObservableCollection<Models.Transaction>(await Services.DatabaseConnection.GetExpensesTransactions());
                     break;
+                case "Płatności":
+                    PaymentsList = new ObservableCollection<Models.Payment>(await Services.DatabaseConnection.GetGlobalPayments());
+                    break;
                 default:
                     TransactionsList = new ObservableCollection<Models.Transaction>(await Services.DatabaseConnection.GetGlobalTransactions());
                     break;
@@ -44,7 +50,7 @@ namespace HomeBudget.Views
 
             expensesList.ItemsSource = TransactionsList;
         }
-        protected async override void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
             updateTransactionList();
@@ -64,16 +70,23 @@ namespace HomeBudget.Views
                 {
                     case "Przychody":
                         TransactionsList = new ObservableCollection<Models.Transaction>(await Services.DatabaseConnection.GetIncomeTransactions());
+                        expensesList.ItemsSource = TransactionsList;
                         break;
                     case "Wydatki":
                         TransactionsList = new ObservableCollection<Models.Transaction>(await Services.DatabaseConnection.GetExpensesTransactions());
+                        expensesList.ItemsSource = TransactionsList;
+                        break;
+                    case "Płatności":
+                        PaymentsList = new ObservableCollection<Models.Payment>(await Services.DatabaseConnection.GetGlobalPayments());
+                        expensesList.ItemsSource = PaymentsList;
                         break;
                     default:
                         TransactionsList = new ObservableCollection<Models.Transaction>(await Services.DatabaseConnection.GetGlobalTransactions());
+                        expensesList.ItemsSource = TransactionsList;
                         break;
                 }
 
-                expensesList.ItemsSource = TransactionsList;
+                
                 selectedFilter.Text = btn.Text;
 
                 CurrentCheck = btn;
@@ -82,7 +95,8 @@ namespace HomeBudget.Views
 
         private async void addTransaction_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new AddTransactionPage());
+            //await Navigation.PushAsync(new AddTransactionPage());
+            await Navigation.PushAsync(new SelectTransactionToAdd());
         }
 
         private async void editTransaction_Clicked(Object sender, EventArgs e)
@@ -91,6 +105,10 @@ namespace HomeBudget.Views
             {
                 await Navigation.PushAsync(new UpdateTransactionPage(CurrentTransactionItem.Id));
             }
+            else if(CurrentPaymentItem != null)
+            {
+                await Navigation.PushAsync(new UpdatePaymentPage(CurrentPaymentItem.Id));
+            }    
             else
             {
                 await DisplayAlert("Edycja", "Nie zaznaczono elementu do edycji!", "Ok");
@@ -109,6 +127,15 @@ namespace HomeBudget.Views
                     updateTransactionList();
                 }
             }
+            else if(CurrentPaymentItem != null)
+            {
+                bool answer = await DisplayAlert("Usuwanie", "Czy na pewno chcesz usunąć " + CurrentPaymentItem.Name, "Tak", "Nie");
+                if (answer)
+                {
+                    await Services.DatabaseConnection.DeletePayment(CurrentPaymentItem.Id);
+                    updateTransactionList();
+                }
+            }
             else
             {
                 await DisplayAlert("Usuwanie", "Nie zaznaczono elementu do usunięcia!", "Ok");
@@ -118,14 +145,24 @@ namespace HomeBudget.Views
         {
             GroupableItemsView item = sender as GroupableItemsView;
             Models.Transaction tr = null;
+            Models.Payment pay = null;
             if (item != null)
             {
                 tr = item.SelectedItem as Models.Transaction;
+                pay = item.SelectedItem as Models.Payment;
             }
             if (tr != null)
             {
                 CurrentTransactionItem = tr;
+                return;
             }
+            else if(pay != null)
+            {
+                CurrentPaymentItem = pay;
+            }
+            
+
+
         }
 
         private void hideFilters_Clicked(object sender, EventArgs e)

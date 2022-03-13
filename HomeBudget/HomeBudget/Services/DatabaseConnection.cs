@@ -22,6 +22,7 @@ namespace HomeBudget.Services
 
             await db.CreateTableAsync<Transaction>();
             await db.CreateTableAsync<Account>();
+            await db.CreateTableAsync<Payment>();
         }
 
         public static async Task AddTransaction(Transaction transaction)
@@ -29,17 +30,49 @@ namespace HomeBudget.Services
             await Init();
             await db.InsertAsync(transaction);
         }
-
         public static async Task UpdateTransaction(Transaction transaction)
         {
             await Init();
             await db.UpdateAsync(transaction);
         }
-
         public static async Task DeleteTransaction(int id)
         {
             await Init();
             await db.DeleteAsync<Transaction>(id);
+        }
+
+        public static async Task AddPayment(Payment payment)
+        {
+            await Init();
+            await db.InsertAsync(payment);
+        }
+
+        public static async Task DeletePayment(int id)
+        {
+            await Init();
+            await db.DeleteAsync<Payment>(id);
+        }
+
+        public static async Task UpdatePayment(Payment payment)
+        {
+            await Init();
+            await db.UpdateAsync(payment);
+        }
+
+        public static async Task<IEnumerable<Payment>> GetGlobalPayments()
+        {
+            await Init();
+            var trans = await db.QueryAsync<Payment>($"SELECT * FROM \"Payment\" ORDER BY Date DESC");
+            return trans;
+        }
+
+        public static async Task<Payment> GetPaymentById(int id)
+        {
+            await Init();
+            string query = "SELECT * FROM \"Payment\" WHERE Id == " + id.ToString();
+            var trans = await db.FindWithQueryAsync<Payment>(query);
+
+            return trans;
         }
 
         public static async Task AddAccount(Account account)
@@ -74,7 +107,8 @@ namespace HomeBudget.Services
         public static async Task<IEnumerable<Transaction>> GetGlobalTransactions()
         {
             await Init();
-            return await db.Table<Transaction>().ToListAsync();
+            var trans = await db.QueryAsync<Transaction>($"SELECT * FROM \"Transaction\" ORDER BY Date DESC");
+            return trans;
         }
 
         public static async Task<List<Account>> GetAccounts()
@@ -86,14 +120,14 @@ namespace HomeBudget.Services
         public static async Task<IEnumerable<Transaction>> GetIncomeTransactions()
         {
             await Init();
-            var trans = await db.QueryAsync<Transaction>($"SELECT * FROM \"Transaction\" WHERE Type = \"Przychody\"");
+            var trans = await db.QueryAsync<Transaction>($"SELECT * FROM \"Transaction\" WHERE Type = \"Przychody\" ORDER BY Date DESC");
             return trans;
         }
 
         public static async Task<IEnumerable<Transaction>> GetExpensesTransactions()
         {
             await Init();
-            string query = "SELECT * FROM \"Transaction\" WHERE Type = \"Wydatki\"";
+            string query = "SELECT * FROM \"Transaction\" WHERE Type = \"Wydatki\" ORDER BY Date DESC";
             var trans = await db.QueryAsync<Transaction>(query);
             return trans;
         }
