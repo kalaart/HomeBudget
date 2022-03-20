@@ -14,7 +14,7 @@ namespace HomeBudget.Views
             "Przychody",
             "Wydatki",
             "Płatności",
-            "Wszystkie"
+            //"Wszystkie"
         };
 
         public ObservableCollection<Models.Transaction> TransactionsList { get; set; }
@@ -36,19 +36,21 @@ namespace HomeBudget.Views
             {
                 case "Przychody":
                     TransactionsList = new ObservableCollection<Models.Transaction>(await Services.DatabaseConnection.GetIncomeTransactions());
+                    expensesList.ItemsSource = TransactionsList;
                     break;
                 case "Wydatki":
                     TransactionsList = new ObservableCollection<Models.Transaction>(await Services.DatabaseConnection.GetExpensesTransactions());
+                    expensesList.ItemsSource = TransactionsList;
                     break;
                 case "Płatności":
                     PaymentsList = new ObservableCollection<Models.Payment>(await Services.DatabaseConnection.GetGlobalPayments());
+                    expensesList.ItemsSource = PaymentsList;
                     break;
                 default:
                     TransactionsList = new ObservableCollection<Models.Transaction>(await Services.DatabaseConnection.GetGlobalTransactions());
                     break;
             }
 
-            expensesList.ItemsSource = TransactionsList;
         }
         protected override void OnAppearing()
         {

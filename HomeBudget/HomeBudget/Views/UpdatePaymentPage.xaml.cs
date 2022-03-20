@@ -16,7 +16,7 @@ namespace HomeBudget.Views
         public int ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime Date { get; set; }
         public float? Price { get; set; }
         public string SelectedType { get; set; }
 
@@ -38,7 +38,7 @@ namespace HomeBudget.Views
                 Name = Payment.Name;
                 Description = Payment.Description;
                 Price = Payment.Price;
-                DateTime = Payment.Date;
+                Date = Payment.Date;
                 SelectedType = Payment.Type;
             }
 
@@ -57,17 +57,17 @@ namespace HomeBudget.Views
             Payment.Name = Name;
             Payment.Description = Description;
             Payment.Price = (float)Price;
-            Payment.Date = DateTime;
+            Payment.Date = Date;
             Payment.Type = SelectedType;
 
             await Services.DatabaseConnection.UpdatePayment(Payment);
 
-            await Navigation.PopAsync();
+            await Navigation.PopToRootAsync();
         }
 
         private async void CancelBtn_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PopAsync();
+            await Navigation.PopToRootAsync();
         }
     }
 }

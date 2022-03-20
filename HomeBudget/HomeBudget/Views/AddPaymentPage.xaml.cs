@@ -14,17 +14,15 @@ namespace HomeBudget.Views
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
         public float? Price { get; set; }
         public string SelectedType { get; set; }
-
-        NavigationPage navPage;
         public AddPaymentPage()
         {
             InitializeComponent();
 
             SelectedType = "Płatności";
-            navPage = new NavigationPage(new MainTabbedPage());
+
             BindingContext = this;
         }
 
@@ -41,18 +39,16 @@ namespace HomeBudget.Views
                 Name = Name,
                 Description = Description,
                 Price = (float)Price,
-                Date = DateTime,
+                Date = Date,
                 Type = SelectedType
             });
 
-            Application.Current.MainPage = navPage;
-            await navPage.PopAsync();
+            await Navigation.PopToRootAsync();
         }
 
-                private async void CancelBtn_Clicked(object sender, EventArgs e)
+        private async void CancelBtn_Clicked(object sender, EventArgs e)
         {
-            Application.Current.MainPage = navPage;
-            await navPage.PopAsync();
+            await Navigation.PopToRootAsync();
         }
     }
 }

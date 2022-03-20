@@ -20,7 +20,7 @@ namespace HomeBudget.Views
             AccountsList = new ObservableCollection<Models.Account>(await Services.DatabaseConnection.GetAccounts());
             accountsList.ItemsSource = AccountsList;
             float sum = await Services.DatabaseConnection.GetFunctionResult("SELECT SUM(Balance) FROM \"Account\"");
-            totalMoney.Text = sum.ToString("Total: 0 Lei");
+            totalMoney.Text = sum.ToString("Total: 0 PLN");
         }
 
         private void accountsList_SelectionChanged(object sender, SelectionChangedEventArgs e)

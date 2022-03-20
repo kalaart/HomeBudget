@@ -38,7 +38,7 @@
 
                                 <Label Grid.Column="1"
                                        HorizontalOptions="EndAndExpand"
-                                       Text="{Binding Path=Balance,StringFormat='{0:F2} Lei'}"
+                                       Text="{Binding Path=Balance,StringFormat='{0:F2} PLN'}"
                                        TextColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                                        FontAttributes="Bold"
                                        FontSize="Medium"

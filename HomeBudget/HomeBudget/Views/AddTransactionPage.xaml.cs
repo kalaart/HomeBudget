@@ -1,6 +1,7 @@
 ﻿using HomeBudget.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
@@ -33,14 +34,14 @@ namespace HomeBudget.Views
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public float? Price { get; set; } = null;
+       // public float? Price { get; set; } = null;
+        public string Price { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
 
         //public Account SelectedAccount { get; set; }
         public string SelectedCategory { get; set; }
         public string SelectedTypes { get; set; }
 
-        private NavigationPage navPage;
         public AddTransactionPage(string type)
         {
             InitializeComponent();
@@ -50,7 +51,6 @@ namespace HomeBudget.Views
             }).Wait();
 
             SelectedTypes = type;
-            navPage = new NavigationPage(new MainTabbedPage());
 
             BindingContext = this;
         }
@@ -67,7 +67,8 @@ namespace HomeBudget.Views
             {
                 Name = Name,
                 Description = Description,
-                Price = (float)Price,
+                //Price = (float)Price,
+                Price = float.Parse(Price),
                 Category = SelectedCategory,
                 Date = Date,
                 Type = SelectedTypes,
@@ -85,14 +86,25 @@ namespace HomeBudget.Views
             */
             //await Services.DatabaseConnection.UpdateAccount(SelectedAccount);
 
-            Application.Current.MainPage = navPage;
-            await navPage.PopAsync();
+            await Navigation.PopToRootAsync();
         }
 
         private async void CancelBtn_Clicked(object sender, EventArgs e)
         {
-            Application.Current.MainPage = navPage;
-            await navPage.PopAsync();
+            await Navigation.PopToRootAsync();
+        }
+
+        private void TransactionPrice_PropertyChanging(object sender, PropertyChangingEventArgs e)
+        {
+            int ala = 1;
+            ala += 1;
+
+        }
+
+        private void TransactionPrice_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int ala = 1;
+            ala += 1;
         }
     }
 }

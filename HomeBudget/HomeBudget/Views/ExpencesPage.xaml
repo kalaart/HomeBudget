@@ -121,7 +121,7 @@
                             <Label Grid.RowSpan="2"
                                    Grid.Column="2"
                                    HorizontalOptions="EndAndExpand"
-                                   Text="{Binding Path=Price,StringFormat='{0:F2} Lei'}"
+                                   Text="{Binding Path=Price,StringFormat='{0:F2} PLN'}"
                                    FontAttributes="Bold"
                                    FontSize="Medium"
                                    Style="{StaticResource TitleStyle}"/>
