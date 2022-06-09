@@ -122,11 +122,43 @@ namespace HomeBudget.ViewModels
 
         public async void ValueChangeMethod(string grafType)
         {
+
+            DateTime dtStart = new DateTime(CurrentShowDate.Year, CurrentShowDate.Month, 1);
+            DateTime dtStop = new DateTime(CurrentShowDate.Year, CurrentShowDate.Month, 1);
+            dtStop = dtStop.AddMonths(1);
+
+            var listOfIncome = await Services.DatabaseConnection.GetIncomeTransactions();
+
+            IncomeSum = 0;
+
+            foreach (var income in listOfIncome)
+            {
+                if (income.Date.CompareTo(dtStart) >= 0 && income.Date.CompareTo(dtStop) <= 0)
+                {
+                    IncomeSum += income.Price;
+                }
+            }
+
+            var listOfExpenses = await Services.DatabaseConnection.GetExpensesTransactions();
+
+            ExpencesSum = 0;
+
+            foreach (var expense in listOfExpenses)
+            {
+                if (expense.Date.CompareTo(dtStart) >= 0 && expense.Date.CompareTo(dtStop) <= 0)
+                {
+                    ExpencesSum += expense.Price;
+                }
+            }
+
+            //Balance = IncomeSum - ExpencesSum;
+
             if (grafType == "Wszystko")
             {
                 GrafData = await Services.ChartGenerator.GetOverView(CurrentShowDate);
-                IncomeSum = await Services.DatabaseConnection.GetFunctionResult($"SELECT SUM(Price) FROM \"Transaction\" WHERE Type = \"Przychdy\" ");
-                ExpencesSum = await Services.DatabaseConnection.GetFunctionResult($"SELECT SUM(Price) FROM \"Transaction\" WHERE Type = \"Wydatki\" ");
+                //DateTime dt = new DateTime(CurrentShowDate.Year,CurrentShowDate.Month,1);
+                //IncomeSum = await Services.DatabaseConnection.GetFunctionResult($"SELECT SUM(Price) FROM \"Transaction\" WHERE Type = \"Przychody\"");// AND (Date BETWEEN " + dt.ToString("O") + " AND " + dt.AddMonths(1).ToString("o") + "))");
+                //ExpencesSum = await Services.DatabaseConnection.GetFunctionResult($"SELECT SUM(Price) FROM \"Transaction\" WHERE Type = \"Wydatki\"");// AND (Date BETWEEN " + dt.ToString("yyyy-MM-dd") + " AND " + dt.AddMonths(1).ToString("yyyy-MM-dd") + "))");
                 Balance = IncomeSum - ExpencesSum;
                 if (Balance < 0)
                 {
@@ -163,9 +195,38 @@ namespace HomeBudget.ViewModels
             Task.Run(async () =>
             {
                 GrafData = await Services.ChartGenerator.GetOverView(CurrentShowDate);
-                IncomeSum = await Services.DatabaseConnection.GetFunctionResult($"SELECT SUM(Price) FROM \"Transaction\" WHERE Type = \"Przychody\" ");
-                ExpencesSum = await Services.DatabaseConnection.GetFunctionResult($"SELECT SUM(Price) FROM \"Transaction\" WHERE Type = \"Wydatki\" ");
+                DateTime dtStart = new DateTime(CurrentShowDate.Year,CurrentShowDate.Month,1);
+                DateTime dtStop = new DateTime(CurrentShowDate.Year, CurrentShowDate.Month, 1);
+
+                dtStop.AddMonths(1);
+
+
+                var listOfIncome = await Services.DatabaseConnection.GetIncomeTransactions();
+
+                IncomeSum = 0;
+
+                foreach (var income in listOfIncome)
+                {
+                    if(income.Date.CompareTo(dtStart) >= 0 && income.Date.CompareTo(dtStop) <= 0)
+                    {
+                        IncomeSum += income.Price;
+                    }
+                }
+
+                var listOfExpenses = await Services.DatabaseConnection.GetExpensesTransactions();
+
+                ExpencesSum = 0;
+
+                foreach (var expense in listOfExpenses)
+                {
+                    if (expense.Date.CompareTo(dtStart) >= 0 && expense.Date.CompareTo(dtStop) <= 0)
+                    {
+                        ExpencesSum += expense.Price;
+                    }
+                }
+
                 Balance = IncomeSum - ExpencesSum;
+
                 if (Balance < 0)
                 {
                     BalanceColor = Color.Red;
@@ -175,7 +236,7 @@ namespace HomeBudget.ViewModels
                     BalanceColor = Color.Green;
                 }
 
-                TotalMessage = "Bilans: ";
+                TotalMessage = "Bilans: " + Balance.ToString();
             }).Wait();
 
             NextMonth = new Command(async =>
@@ -188,9 +249,16 @@ namespace HomeBudget.ViewModels
 
                     ColorPrevButton = (Style)Application.Current.Resources["MainButtonUnChecked"];
 
-                    if (CurrentShowDate.Month == dt.Month)
-                        ColorNextButton = (Style)Application.Current.Resources["MainButtonChecked"];
+                   // if (CurrentShowDate.Month == dt.Month)
+                     //   ColorNextButton = (Style)Application.Current.Resources["MainButtonChecked"];
 
+                    ValueChangeMethod(CurrentAppliedFilter);
+                }
+                else
+                {
+                    dt = new DateTime(CurrentShowDate.Year + 1, 1, CurrentShowDate.Day);
+                    CurrentShowDate = dt;
+                    ColorNextButton = (Style)Application.Current.Resources["MainButtonUnChecked"];
                     ValueChangeMethod(CurrentAppliedFilter);
                 }
             });
@@ -204,8 +272,16 @@ namespace HomeBudget.ViewModels
                     CurrentShowDate = CurrentShowDate.AddMonths(-1);
                     ColorNextButton = (Style)Application.Current.Resources["MainButtonUnChecked"];
 
-                    if (CurrentShowDate.Month == dt.Month)
-                        ColorPrevButton = (Style)Application.Current.Resources["MainButtonChecked"];
+                  //  if (CurrentShowDate.Month == dt.Month)
+                    //    ColorPrevButton = (Style)Application.Current.Resources["MainButtonChecked"];
+                    ValueChangeMethod(CurrentAppliedFilter);
+                }
+                else
+                {
+                    dt = new DateTime(CurrentShowDate.Year - 1, 12, CurrentShowDate.Day);
+
+                    CurrentShowDate = dt;
+                    ColorNextButton = (Style)Application.Current.Resources["MainButtonUnChecked"];
                     ValueChangeMethod(CurrentAppliedFilter);
                 }
             });

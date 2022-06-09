@@ -15,7 +15,7 @@ namespace HomeBudget.Views
 
         private async void getStarted_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new AddAccountPage());
+            //await Navigation.PushAsync(new AddAccountPage());
         }
     }
 }

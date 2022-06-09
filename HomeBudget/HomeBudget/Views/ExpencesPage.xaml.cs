@@ -162,9 +162,6 @@ namespace HomeBudget.Views
             {
                 CurrentPaymentItem = pay;
             }
-            
-
-
         }
 
         private void hideFilters_Clicked(object sender, EventArgs e)

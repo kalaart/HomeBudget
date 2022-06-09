@@ -19,7 +19,5 @@ namespace HomeBudget.Models
         public DateTime Date { get; set; }
 
         public string Type { get; set; }
-
-        //public int Account { get; set; }
     }
 }
